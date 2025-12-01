@@ -89,6 +89,15 @@ Point your coding agent at the relevant configuration. Check the [README](../REA
 
 **Week 1 is live!** Head to [02_evaluate-hub-model.md](02_evaluate-hub-model.md) to start evaluating models and climb the leaderboard.
 
+<iframe
+	src="https://hf-skills-hacker-leaderboard.hf.space"
+	frameborder="0"
+	width="850"
+	height="450"
+></iframe>
+
+[Leaderboard](https://hf-skills-hacker-leaderboard.hf.space)
+
 ## Earning XP
 
 Each quest has three tiers:
