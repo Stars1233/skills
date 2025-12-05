@@ -32,7 +32,7 @@ def parse_frontmatter(text: str) -> dict[str, str]:
 
 def collect_skills() -> list[dict[str, str]]:
     skills: list[dict[str, str]] = []
-    for skill_md in ROOT.glob("*/SKILL.md"):
+    for skill_md in ROOT.glob("*/skills/*/SKILL.md"):
         meta = parse_frontmatter(skill_md.read_text(encoding="utf-8"))
         name = meta.get("name")
         description = meta.get("description")
@@ -42,7 +42,7 @@ def collect_skills() -> list[dict[str, str]]:
             {
                 "name": name,
                 "description": description,
-                "path": skill_md.parent.name,
+                "path": str(skill_md.parent.relative_to(ROOT)),
             }
         )
     # Keep deterministic order for consistent output

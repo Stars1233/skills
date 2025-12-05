@@ -3,10 +3,10 @@
 You have additional SKILLs documented in directories containing a "SKILL.md" file.
 
 These skills are:
- - hugging-face-dataset-creator -> "hf_dataset_creator/SKILL.md"
- - hugging-face-evaluation-manager -> "hf_model_evaluation/SKILL.md"
- - hugging-face-paper-publisher -> "hf-paper-publisher/SKILL.md"
- - model-trainer -> "hf-llm-trainer/SKILL.md"
+ - hugging-face-dataset-creator -> "hf_dataset_creator/skills/hugging-face-dataset-creator/SKILL.md"
+ - hugging-face-evaluation-manager -> "hf_model_evaluation/skills/hugging-face-evaluation-manager/SKILL.md"
+ - hugging-face-paper-publisher -> "hf-paper-publisher/skills/hugging-face-paper-publisher/SKILL.md"
+ - model-trainer -> "hf-llm-trainer/skills/model-trainer/SKILL.md"
 
 IMPORTANT: You MUST read the SKILL.md file whenever the description of the skills matches the user intent, or may help accomplish their task. 
 

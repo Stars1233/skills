@@ -271,12 +271,55 @@ hub_repo_details(["uv-scripts/classification"], repo_type="dataset", include_rea
 
 **Popular collections:** ocr, classification, synthetic-data, vllm, dataset-creation
 
-### Approach 3: TRL Jobs Package (For Terminal Use)
+### Approach 3: HF Jobs CLI (Direct Terminal Commands)
 
-The `trl-jobs` package provides optimized defaults and one-liner training. **Note: This approach uses bash commands, not `hf_jobs()` MCP tool.**
+When the `hf_jobs()` MCP tool is unavailable, use the `hf jobs` CLI directly.
+
+**⚠️ CRITICAL: CLI Syntax Rules**
 
 ```bash
-# Install (users only, not needed for this environment)
+# ✅ CORRECT syntax - flags BEFORE script URL
+hf jobs uv run --flavor a10g-large --timeout 2h --secrets HF_TOKEN "https://example.com/train.py"
+
+# ❌ WRONG - "run uv" instead of "uv run"
+hf jobs run uv "https://example.com/train.py" --flavor a10g-large
+
+# ❌ WRONG - flags AFTER script URL (will be ignored!)
+hf jobs uv run "https://example.com/train.py" --flavor a10g-large
+
+# ❌ WRONG - "--secret" instead of "--secrets" (plural)
+hf jobs uv run --secret HF_TOKEN "https://example.com/train.py"
+```
+
+**Key syntax rules:**
+1. Command order is `hf jobs uv run` (NOT `hf jobs run uv`)
+2. All flags (`--flavor`, `--timeout`, `--secrets`) must come BEFORE the script URL
+3. Use `--secrets` (plural), not `--secret`
+4. Script URL must be the last positional argument
+
+**Complete CLI example:**
+```bash
+hf jobs uv run \
+  --flavor a10g-large \
+  --timeout 2h \
+  --secrets HF_TOKEN \
+  "https://huggingface.co/user/repo/resolve/main/train.py"
+```
+
+**Check job status via CLI:**
+```bash
+hf jobs ps                        # List all jobs
+hf jobs logs <job-id>             # View logs
+hf jobs inspect <job-id>          # Job details
+hf jobs cancel <job-id>           # Cancel a job
+```
+
+### Approach 4: TRL Jobs Package (Simplified Training)
+
+The `trl-jobs` package provides optimized defaults and one-liner training.
+
+```bash
+# Install
 pip install trl-jobs
 
 # Train with SFT (simplest possible)
@@ -289,7 +332,7 @@ trl-jobs sft \
 **When to use:** User working in terminal directly (not Claude Code context), quick local experimentation
 **Repository:** https://github.com/huggingface/trl-jobs
 
-⚠️ **In Claude Code context, use Approach 1 (UV Scripts) with `hf_jobs()` instead.**
+⚠️ **In Claude Code context, prefer using `hf_jobs()` MCP tool (Approach 1) when available.**
 
 ## Hardware Selection
 
