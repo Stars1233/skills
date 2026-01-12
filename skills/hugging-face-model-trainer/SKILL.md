@@ -417,7 +417,7 @@ Before submitting:
 **Offer to estimate cost when planning jobs with known parameters.** Use `scripts/estimate_cost.py`:
 
 ```bash
-python scripts/estimate_cost.py \
+uv run scripts/estimate_cost.py \
   --model meta-llama/Llama-2-7b-hf \
   --dataset trl-lib/Capybara \
   --hardware a10g-large \

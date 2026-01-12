@@ -14,11 +14,11 @@ This skill provides tools to manage datasets on the Hugging Face Hub with a focu
 2.1.0
 
 # Dependencies
-- huggingface_hub
-- duckdb (for SQL queries)
-- datasets (for pushing query results to Hub)
-- json (built-in)
-- time (built-in)
+# This skill uses PEP 723 scripts with inline dependency management
+# Scripts auto-install requirements when run with: uv run scripts/script_name.py
+
+- uv (Python package manager)
+- Getting Started: See "Usage Instructions" below for PEP 723 usage
 
 # Core Capabilities
 
@@ -52,22 +52,18 @@ Supports diverse dataset types through template system:
 
 # Usage Instructions
 
+The skill includes two Python scripts that use PEP 723 inline dependency management:
+
 > **All paths are relative to the directory containing this SKILL.md
 file.**
-> Before running any script, first `cd` to that directory or use the full
-path.
+> Scripts are run with: `uv run scripts/script_name.py [arguments]`
 
-
-The skill includes two Python scripts:
 - `scripts/dataset_manager.py` - Dataset creation and management
 - `scripts/sql_manager.py` - SQL-based dataset querying and transformation
 
 ### Prerequisites
-- `huggingface_hub` library: `uv add huggingface_hub`
-- `duckdb` library (for SQL): `uv add duckdb`
-- `datasets` library (for pushing): `uv add datasets`
+- `uv` package manager installed
 - `HF_TOKEN` environment variable must be set with a Write-access token
-- Activate virtual environment: `source .venv/bin/activate`
 
 ---
 
@@ -79,18 +75,18 @@ Query, transform, and push Hugging Face datasets using DuckDB SQL. The `hf://` p
 
 ```bash
 # Query a dataset
-python scripts/sql_manager.py query \
+uv run scripts/sql_manager.py query \
   --dataset "cais/mmlu" \
   --sql "SELECT * FROM data WHERE subject='nutrition' LIMIT 10"
 
 # Get dataset schema
-python scripts/sql_manager.py describe --dataset "cais/mmlu"
+uv run scripts/sql_manager.py describe --dataset "cais/mmlu"
 
 # Sample random rows
-python scripts/sql_manager.py sample --dataset "cais/mmlu" --n 5
+uv run scripts/sql_manager.py sample --dataset "cais/mmlu" --n 5
 
 # Count rows with filter
-python scripts/sql_manager.py count --dataset "cais/mmlu" --where "subject='nutrition'"
+uv run scripts/sql_manager.py count --dataset "cais/mmlu" --where "subject='nutrition'"
 ```
 
 ## SQL Query Syntax
@@ -122,24 +118,24 @@ SELECT regexp_replace(question, '\n', '') AS cleaned FROM data
 ### 1. Explore Dataset Structure
 ```bash
 # Get schema
-python scripts/sql_manager.py describe --dataset "cais/mmlu"
+uv run scripts/sql_manager.py describe --dataset "cais/mmlu"
 
 # Get unique values in column
-python scripts/sql_manager.py unique --dataset "cais/mmlu" --column "subject"
+uv run scripts/sql_manager.py unique --dataset "cais/mmlu" --column "subject"
 
 # Get value distribution
-python scripts/sql_manager.py histogram --dataset "cais/mmlu" --column "subject" --bins 20
+uv run scripts/sql_manager.py histogram --dataset "cais/mmlu" --column "subject" --bins 20
 ```
 
 ### 2. Filter and Transform
 ```bash
 # Complex filtering with SQL
-python scripts/sql_manager.py query \
+uv run scripts/sql_manager.py query \
   --dataset "cais/mmlu" \
   --sql "SELECT subject, COUNT(*) as cnt FROM data GROUP BY subject HAVING cnt > 100"
 
 # Using transform command
-python scripts/sql_manager.py transform \
+uv run scripts/sql_manager.py transform \
   --dataset "cais/mmlu" \
   --select "subject, COUNT(*) as cnt" \
   --group-by "subject" \
@@ -150,14 +146,14 @@ python scripts/sql_manager.py transform \
 ### 3. Create Subsets and Push to Hub
 ```bash
 # Query and push to new dataset
-python scripts/sql_manager.py query \
+uv run scripts/sql_manager.py query \
   --dataset "cais/mmlu" \
   --sql "SELECT * FROM data WHERE subject='nutrition'" \
   --push-to "username/mmlu-nutrition-subset" \
   --private
 
 # Transform and push
-python scripts/sql_manager.py transform \
+uv run scripts/sql_manager.py transform \
   --dataset "ibm/duorc" \
   --config "ParaphraseRC" \
   --select "question, answers" \
@@ -168,14 +164,14 @@ python scripts/sql_manager.py transform \
 ### 4. Export to Local Files
 ```bash
 # Export to Parquet
-python scripts/sql_manager.py export \
+uv run scripts/sql_manager.py export \
   --dataset "cais/mmlu" \
   --sql "SELECT * FROM data WHERE subject='nutrition'" \
   --output "nutrition.parquet" \
   --format parquet
 
 # Export to JSONL
-python scripts/sql_manager.py export \
+uv run scripts/sql_manager.py export \
   --dataset "cais/mmlu" \
   --sql "SELECT * FROM data LIMIT 100" \
   --output "sample.jsonl" \
@@ -185,19 +181,19 @@ python scripts/sql_manager.py export \
 ### 5. Working with Dataset Configs/Splits
 ```bash
 # Specify config (subset)
-python scripts/sql_manager.py query \
+uv run scripts/sql_manager.py query \
   --dataset "ibm/duorc" \
   --config "ParaphraseRC" \
   --sql "SELECT * FROM data LIMIT 5"
 
 # Specify split
-python scripts/sql_manager.py query \
+uv run scripts/sql_manager.py query \
   --dataset "cais/mmlu" \
   --split "test" \
   --sql "SELECT COUNT(*) FROM data"
 
 # Query all splits
-python scripts/sql_manager.py query \
+uv run scripts/sql_manager.py query \
   --dataset "cais/mmlu" \
   --split "*" \
   --sql "SELECT * FROM data LIMIT 10"
@@ -206,7 +202,7 @@ python scripts/sql_manager.py query \
 ### 6. Raw SQL with Full Paths
 For complex queries or joining datasets:
 ```bash
-python scripts/sql_manager.py raw --sql "
+uv run scripts/sql_manager.py raw --sql "
   SELECT a.*, b.* 
   FROM 'hf://datasets/dataset1@~parquet/default/train/*.parquet' a
   JOIN 'hf://datasets/dataset2@~parquet/default/train/*.parquet' b
@@ -315,21 +311,21 @@ get_dataset_details("username/dataset-name")
 **2. Creation (Use This Skill):**
 ```bash
 # Initialize new dataset
-python scripts/dataset_manager.py init --repo_id "your-username/dataset-name" [--private]
+uv run scripts/dataset_manager.py init --repo_id "your-username/dataset-name" [--private]
 
 # Configure with detailed system prompt
-python scripts/dataset_manager.py config --repo_id "your-username/dataset-name" --system_prompt "$(cat system_prompt.txt)"
+uv run scripts/dataset_manager.py config --repo_id "your-username/dataset-name" --system_prompt "$(cat system_prompt.txt)"
 ```
 
 **3. Content Management (Use This Skill):**
 ```bash
 # Quick setup with any template
-python scripts/dataset_manager.py quick_setup \
+uv run scripts/dataset_manager.py quick_setup \
   --repo_id "your-username/dataset-name" \
   --template classification
 
 # Add data with template validation
-python scripts/dataset_manager.py add_rows \
+uv run scripts/dataset_manager.py add_rows \
   --repo_id "your-username/dataset-name" \
   --template qa \
   --rows_json "$(cat your_qa_data.json)"
@@ -431,15 +427,15 @@ The skill includes diverse training examples beyond just MCP usage:
 **Using Different Example Sets:**
 ```bash
 # Add MCP-focused examples
-python scripts/dataset_manager.py add_rows --repo_id "your-username/dataset-name" \
+uv run scripts/dataset_manager.py add_rows --repo_id "your-username/dataset-name" \
   --rows_json "$(cat examples/training_examples.json)"
 
 # Add diverse conversational examples
-python scripts/dataset_manager.py add_rows --repo_id "your-username/dataset-name" \
+uv run scripts/dataset_manager.py add_rows --repo_id "your-username/dataset-name" \
   --rows_json "$(cat examples/diverse_training_examples.json)"
 
 # Mix both for comprehensive training data
-python scripts/dataset_manager.py add_rows --repo_id "your-username/dataset-name" \
+uv run scripts/dataset_manager.py add_rows --repo_id "your-username/dataset-name" \
   --rows_json "$(jq -s '.[0] + .[1]' examples/training_examples.json examples/diverse_training_examples.json)"
 ```
 
@@ -447,24 +443,24 @@ python scripts/dataset_manager.py add_rows --repo_id "your-username/dataset-name
 
 **List Available Templates:**
 ```bash
-python scripts/dataset_manager.py list_templates
+uv run scripts/dataset_manager.py list_templates
 ```
 
 **Quick Setup (Recommended):**
 ```bash
-python scripts/dataset_manager.py quick_setup --repo_id "your-username/dataset-name" --template classification
+uv run scripts/dataset_manager.py quick_setup --repo_id "your-username/dataset-name" --template classification
 ```
 
 **Manual Setup:**
 ```bash
 # Initialize repository
-python scripts/dataset_manager.py init --repo_id "your-username/dataset-name" [--private]
+uv run scripts/dataset_manager.py init --repo_id "your-username/dataset-name" [--private]
 
 # Configure with system prompt
-python scripts/dataset_manager.py config --repo_id "your-username/dataset-name" --system_prompt "Your prompt here"
+uv run scripts/dataset_manager.py config --repo_id "your-username/dataset-name" --system_prompt "Your prompt here"
 
 # Add data with validation
-python scripts/dataset_manager.py add_rows \
+uv run scripts/dataset_manager.py add_rows \
   --repo_id "your-username/dataset-name" \
   --template qa \
   --rows_json '[{"question": "What is AI?", "answer": "Artificial Intelligence..."}]'
@@ -472,7 +468,7 @@ python scripts/dataset_manager.py add_rows \
 
 **View Dataset Statistics:**
 ```bash
-python scripts/dataset_manager.py stats --repo_id "your-username/dataset-name"
+uv run scripts/dataset_manager.py stats --repo_id "your-username/dataset-name"
 ```
 
 ### Error Handling
@@ -488,11 +484,11 @@ python scripts/dataset_manager.py stats --repo_id "your-username/dataset-name"
 ## Example 1: Create Training Subset from Existing Dataset
 ```bash
 # 1. Explore the source dataset
-python scripts/sql_manager.py describe --dataset "cais/mmlu"
-python scripts/sql_manager.py histogram --dataset "cais/mmlu" --column "subject"
+uv run scripts/sql_manager.py describe --dataset "cais/mmlu"
+uv run scripts/sql_manager.py histogram --dataset "cais/mmlu" --column "subject"
 
 # 2. Query and create subset
-python scripts/sql_manager.py query \
+uv run scripts/sql_manager.py query \
   --dataset "cais/mmlu" \
   --sql "SELECT * FROM data WHERE subject IN ('nutrition', 'anatomy', 'clinical_knowledge')" \
   --push-to "username/mmlu-medical-subset" \
@@ -502,7 +498,7 @@ python scripts/sql_manager.py query \
 ## Example 2: Transform and Reshape Data
 ```bash
 # Transform MMLU to QA format with correct answers extracted
-python scripts/sql_manager.py query \
+uv run scripts/sql_manager.py query \
   --dataset "cais/mmlu" \
   --sql "SELECT question, choices[answer] as correct_answer, subject FROM data" \
   --push-to "username/mmlu-qa-format"
@@ -511,7 +507,7 @@ python scripts/sql_manager.py query \
 ## Example 3: Merge Multiple Dataset Splits
 ```bash
 # Export multiple splits and combine
-python scripts/sql_manager.py export \
+uv run scripts/sql_manager.py export \
   --dataset "cais/mmlu" \
   --split "*" \
   --output "mmlu_all.parquet"
@@ -520,7 +516,7 @@ python scripts/sql_manager.py export \
 ## Example 4: Quality Filtering
 ```bash
 # Filter for high-quality examples
-python scripts/sql_manager.py query \
+uv run scripts/sql_manager.py query \
   --dataset "squad" \
   --sql "SELECT * FROM data WHERE LENGTH(context) > 500 AND LENGTH(question) > 20" \
   --push-to "username/squad-filtered"
@@ -529,7 +525,7 @@ python scripts/sql_manager.py query \
 ## Example 5: Create Custom Training Dataset
 ```bash
 # 1. Query source data
-python scripts/sql_manager.py export \
+uv run scripts/sql_manager.py export \
   --dataset "cais/mmlu" \
   --sql "SELECT question, subject FROM data WHERE subject='nutrition'" \
   --output "nutrition_source.jsonl" \
@@ -538,8 +534,8 @@ python scripts/sql_manager.py export \
 # 2. Process with your pipeline (add answers, format, etc.)
 
 # 3. Push processed data
-python scripts/dataset_manager.py init --repo_id "username/nutrition-training"
-python scripts/dataset_manager.py add_rows \
+uv run scripts/dataset_manager.py init --repo_id "username/nutrition-training"
+uv run scripts/dataset_manager.py add_rows \
   --repo_id "username/nutrition-training" \
   --template qa \
   --rows_json "$(cat processed_data.json)"
