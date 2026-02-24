@@ -55,6 +55,12 @@
       "source": "./skills/hugging-face-trackio",
       "skills": "./",
       "description": "Track and visualize ML training experiments with Trackio. Log metrics via Python API and retrieve them via CLI. Supports real-time dashboards synced to HF Spaces."
+    },
+    {
+      "name": "gradio",
+      "source": "./skills/huggingface-gradio",
+      "skills": "./",
+      "description": "Build Gradio web UIs and demos in Python. Use when creating or editing Gradio apps, components, event listeners, layouts, or chatbots."
     }
   ]
 }
