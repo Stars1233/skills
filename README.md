@@ -9,7 +9,7 @@ The Skills in this repository follow the standardized format [Agent Skill](https
 In practice, skills are self-contained folders that package instructions, scripts, and resources together for an AI agent to use on a specific use case. Each folder includes a `SKILL.md` file with YAML frontmatter (name and description) followed by the guidance your coding agent follows while the skill is active. 
 
 > [!NOTE]
-> 'Skills' is actually an Anthropic term used within Claude AI and Claude Code and not adopted by other agent tools, but we love it! OpenAI Codex uses an `AGENTS.md` file to define the instructions for your coding agent. Google Gemini uses 'extensions' to define the instructions for your coding agent in a `gemini-extension.json` file. **This repo is compatible with all of them, and more!**
+> 'Skills' is actually an Anthropic term used within Claude AI and Claude Code and not adopted by other agent tools, but we love it! OpenAI Codex uses the open [Agent Skills](https://agentskills.io/specification) format, where each skill is a directory with a `SKILL.md` file that Codex discovers from standard `.agents/skills` locations documented in the [Codex Skills guide](https://developers.openai.com/codex/skills/). Codex can also work with an `AGENTS.md` file. Google Gemini uses 'extensions' to define the instructions for your coding agent in a `gemini-extension.json` file. **This repo is compatible with all of them, and more!**
 
 > [!TIP]
 > If your agent doesn't support skills, you can use [`agents/AGENTS.md`](agents/AGENTS.md) directly as a fallback.
@@ -40,13 +40,11 @@ For example:
 
 ### Codex
 
-1. Codex will identify the skills via the `AGENTS.md` file. You can verify the instructions are loaded with:
+1. Copy or symlink any skills you want to use from this repository's `skills/` directory into one of Codex's standard `.agents/skills` locations (for example, `$REPO_ROOT/.agents/skills` or `$HOME/.agents/skills`) as described in the [Codex Skills guide](https://developers.openai.com/codex/skills/).
 
-```
-codex --ask-for-approval never "Summarize the current instructions."
-```
+2. Once a skill is available in one of those locations, Codex will discover it using the Agent Skills standard and load the `SKILL.md` instructions when it decides to use that skill or when you explicitly invoke it.
 
-2. For more details, see the [Codex AGENTS guide](https://developers.openai.com/codex/guides/agents-md).
+3. If your Codex setup still relies on `AGENTS.md`, you can use the generated [`agents/AGENTS.md`](agents/AGENTS.md) file in this repo as a fallback bundle of instructions.
 
 ### Gemini CLI
 
