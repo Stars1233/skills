@@ -1,6 +1,3 @@
-A new version of huggingface_hub (1.7.1) is available! You are using version 1.7.2.
-To update, run: pip install -U huggingface_hub
-
 ---
 name: hf-cli
 description: "Hugging Face Hub CLI (`hf`) for downloading, uploading, and managing repositories, models, datasets, and Spaces on the Hugging Face Hub. Replaces now deprecated `huggingface-cli` command."
