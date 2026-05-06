@@ -85,6 +85,24 @@
       "source": "./skills/huggingface-vision-trainer",
       "skills": "./",
       "description": "Train and fine-tune object detection models (RTDETRv2, YOLOS, DETR and others) and image classification models (timm and transformers models — MobileNetV3, MobileViT, ResNet, ViT/DINOv3) using Transformers Trainer API on Hugging Face Jobs infrastructure or locally. Includes COCO dataset format support, Albumentations augmentation, mAP/mAR metrics, trackio tracking, hardware selection, and Hub persistence."
+    },
+    {
+      "name": "train-sentence-transformer",
+      "source": "./skills/train-sentence-transformer",
+      "skills": "./",
+      "description": "Train or fine-tune SentenceTransformer (bi-encoder) embedding models for semantic similarity, retrieval, clustering, and classification. Covers loss selection, hard-negative mining, NanoBEIR / STS evaluators, multi-task training, distillation, LoRA, Matryoshka, and Hugging Face Hub publishing."
+    },
+    {
+      "name": "train-cross-encoder",
+      "source": "./skills/train-cross-encoder",
+      "skills": "./",
+      "description": "Train or fine-tune CrossEncoder reranker models that score (query, passage) pairs jointly to re-rank first-stage retrieval results. Covers pointwise, pairwise, and listwise ranking losses, distillation, hard-negative mining, evaluators, LoRA, and Hugging Face Hub publishing."
+    },
+    {
+      "name": "train-sparse-encoder",
+      "source": "./skills/train-sparse-encoder",
+      "skills": "./",
+      "description": "Train or fine-tune SparseEncoder (SPLADE) models that produce interpretable sparse embeddings compatible with inverted-index backends. Covers SPLADE pooling with FLOPS regularization, sparse losses, hard-negative mining, sparsity-tracking evaluators, distillation, and Hugging Face Hub publishing."
     }
   ]
 }
