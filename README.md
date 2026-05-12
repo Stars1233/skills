@@ -4,6 +4,9 @@ Hugging Face Skills are definitions for AI/ML tasks like dataset creation, model
 
 The skills in this repository follow the standardized [Agent Skills](https://agentskills.io/home) format.
 
+> [!NOTE]
+> **Just want to give your agent access to the Hugging Face Hub?** Start with [`hf-cli`](https://huggingface.co/docs/hub/agents-cli). It's the recommended first Skill to install: it teaches your agent every `hf` command (search models, manage datasets and buckets, launch Spaces, run jobs) and is generated from your locally installed CLI so it stays current.
+
 ## How do Skills work?
 
 In practice, skills are self-contained folders that package instructions, scripts, and resources together for an AI agent to use on a specific use case. Each folder includes a `SKILL.md` file with YAML frontmatter (name and description) followed by the guidance your coding agent follows while the skill is active. 
